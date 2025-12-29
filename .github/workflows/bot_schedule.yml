@@ -1,0 +1,30 @@
+name: Actualizar Licitaciones Drive
+
+on:
+  schedule:
+    - cron: '0 * * * *' # Ejecutar al minuto 0 de cada hora
+  workflow_dispatch: # Botón manual
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Descargar código del repositorio
+        uses: actions/checkout@v3
+
+      - name: Instalar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Instalar librerías
+        run: pip install -r requirements.txt
+
+      - name: Ejecutar Bot de Licitaciones
+        env:
+          # ¡Importante! Mapear los 3 secretos aquí
+          TICKET_API: ${{ secrets.TICKET_API }}
+          SHEET_ID: ${{ secrets.SHEET_ID }}
+          GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+        run: python bot_drive_final.py
